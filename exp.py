@@ -69,7 +69,7 @@ def predict_and_eval(model, X_test, y_test):
     predicted = model.predict(X_test)
     ###############################################################################
     # Below we visualize the first 4 test samples and show their predicted
-    # digit value in the title.
+    # digit value in the title.a
 
     _, axes = plt.subplots(nrows=1, ncols=4, figsize=(10, 3))
     for ax, image, prediction in zip(axes, X_test, predicted):
