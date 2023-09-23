@@ -90,4 +90,16 @@ def tune_hparams(model,X_train, X_test, X_dev , y_train, y_test, y_dev,list_of_p
     test_acc =  predict_and_eval(best_model,X_test,y_test,False)
     return train_acc, dev_acc, test_acc, optimal_param
     
-    
+def get_combinations(param,values,combinations):
+    new_combinations = []
+    for value in values:
+        for combination in combinations:
+            combination[param] = value
+            new_combinations.append(combination.copy())    
+    return new_combinations
+
+def get_hyperparameter_combinations(param_groups):
+    combinations = [{}]
+    for param,values in param_groups.items():
+        combinations = get_combinations(param,values,combinations)
+    return combinations    
