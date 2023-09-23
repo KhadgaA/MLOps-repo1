@@ -28,8 +28,12 @@ from utils import *
 ###############################################################################
 
 digits = datasets.load_digits()
+print(f"Size of the image: {digits.images[0].shape}")
 # Classification
 X, y = preprocess(digits)
+
+print("Total number of samples: ",len(X))
+
 
 # Create Param groups
 

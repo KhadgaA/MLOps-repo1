@@ -25,3 +25,4 @@ jobs:
       - name: Run experiment
         run:
           python exp.py
+      - run: echo "I have added a echo statement in the github actions yaml file.👍"
