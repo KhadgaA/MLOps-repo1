@@ -28,7 +28,7 @@ from utils import *
 ###############################################################################
 
 digits = datasets.load_digits()
-print(f"Size of the image: {digits.images[0].shape}")
+# print(f"Size of the image: {digits.images[0].shape}")
 # Classification
 X, y = preprocess(digits)
 
@@ -39,27 +39,31 @@ print("Total number of samples: ",len(X))
 
 
 
-gamma = [0.001,0.01,0.1,1,10,100]
-C = [0.1,1,2,5,10]
-# param_groups = [{"gamma":i, "C":j} for i in g for j in C] 
+# gamma = [0.001,0.01,0.1,1,10,100]
+# C = [0.1,1,2,5,10]
+# # param_groups = [{"gamma":i, "C":j} for i in g for j in C] 
 
-param_groups = {
-    "gamma": gamma,
-    "C": C
-    }
+# param_groups = {
+#     "gamma": gamma,
+#     "C": C
+#     }
 
-param_combinations = get_hyperparameter_combinations(param_groups=param_groups)
+
 # Create Train_test_dev size groups
-test_sizes = [0.1, 0.2, 0.3] 
-dev_sizes  = [0.1, 0.2, 0.3]
+# test_sizes = [0.1, 0.2, 0.3] 
+# dev_sizes  = [0.1, 0.2, 0.3]
+test_sizes = [0.2] 
+dev_sizes  = [0.2]
 test_dev_size_groups = [{"test_size":i, "dev_size":j} for i in test_sizes for j in dev_sizes] 
 
 # Create a classifier: a support vector classifier
-model = svm.SVC
-for test_dev_size in test_dev_size_groups:
-    X_train, X_test, X_dev , y_train, y_test, y_dev = split_train_dev_test(X,y,**test_dev_size)
-    train_acc, dev_acc, test_acc, optimal_param = tune_hparams(model,X_train, X_test, X_dev , y_train, y_test, y_dev,param_combinations)
-    _ = 1 - (sum(test_dev_size.values()))
-    print(f'train_size: {_}, dev_size: {test_dev_size["dev_size"]}, test_size: {test_dev_size["test_size"]} , train_acc: {train_acc}, dev_acc: {dev_acc}, test_acc: {test_acc}, optimal_param: {optimal_param}')
+# model = svm.SVC
+models = ["svm","Dtree"]
+compare_models(models,X,y,test_dev_size_groups,runs=2,logs=True)
+# for test_dev_size in test_dev_size_groups:
+#     X_train, X_test, X_dev , y_train, y_test, y_dev = split_train_dev_test(X,y,**test_dev_size)
+#     train_acc, dev_acc, test_acc, optimal_param = tune_hparams(model,X_train, X_test, X_dev , y_train, y_test, y_dev,param_combinations)
+#     _ = 1 - (sum(test_dev_size.values()))
+#     print(f'train_size: {_}, dev_size: {test_dev_size["dev_size"]}, test_size: {test_dev_size["test_size"]} , train_acc: {train_acc}, dev_acc: {dev_acc}, test_acc: {test_acc}, optimal_param: {optimal_param}')
 
 
