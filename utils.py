@@ -5,7 +5,7 @@ from sklearn import datasets, metrics, svm
 
 def preprocess(dataset):
     n_samples = len(dataset.images)
-    data = dataset.images.reshape((n_samples, -1))
+    data = dataset.images#.reshape((n_samples, -1))
     return data, dataset.target
 
 def image_grid(dataset):
@@ -21,7 +21,7 @@ def split_train_dev_test(X,y,test_size,dev_size):
     X_train, _xtest, y_train, _ytest = train_test_split(
     X, y, test_size=_, shuffle=False)
     X_test, X_dev, y_test, y_dev = train_test_split(
-    _xtest, _ytest, test_size=dev_size, shuffle=False)
+    _xtest, _ytest, test_size=dev_size/(dev_size + test_size), shuffle=False)
     return X_train, X_test, X_dev , y_train, y_test, y_dev
 
 # Predict the value of the digit on the test subset
@@ -79,6 +79,7 @@ def tune_hparams(model,X_train, X_test, X_dev , y_train, y_test, y_dev,list_of_p
     best_acc = -1
     for param_group in list_of_param_combination:
         temp_model = model(**param_group)
+
         temp_model.fit(X_train,y_train)
         acc = predict_and_eval(temp_model,X_dev,y_dev,False)
         if acc > best_acc:
