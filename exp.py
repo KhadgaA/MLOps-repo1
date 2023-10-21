@@ -40,4 +40,9 @@ models =[ i for i in models_ if i != ","]
 print(models)
 logs = compare_models(models,X,y,test_dev_size_groups,runs=args.runs,logs=True)
 print("Confusion Matrix between production and Candidate mpdels on test dataset")
-print(metrics.confusion_matrix(logs['svm']["_test_predicted"],logs['Dtree']["_test_predicted"]))
+production_predictions = logs['svm']["_test_predicted"]
+candidate_productions = logs['Dtree']["_test_predicted"]
+print(metrics.confusion_matrix(production_predictions,candidate_productions))
+print("Confusion matrix 2x2:")
+print(metrics.confusion_matrix(production_predictions==candidate_productions,production_predictions==candidate_productions))
+
