@@ -128,12 +128,14 @@ def get_model_hparams(model_name = "svm"):
                         "min_samples_split": min_samples_split
                         }
     return param_groups 
+
 import pandas as pd   
 def print_log(logger):
     for model,model_results in logger.items():
         print(f"model: {model}:")
         _df = pd.DataFrame(model_results)
         print(_df.describe().loc[["mean","std"]])
+        
 def compare_models(models,X,y,test_dev_size_groups, runs = 1,logs = False):
     if logs:
         logger = {}
