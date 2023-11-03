@@ -2,6 +2,7 @@ from sklearn.model_selection import train_test_split
 # Standard scientific Python imports
 import matplotlib.pyplot as plt
 from sklearn import datasets, metrics, svm
+from joblib import dump, load
 
 def preprocess(dataset):
     n_samples = len(dataset.images)
@@ -77,17 +78,22 @@ def predict_and_eval(model, X_test, y_test,display=False):
 
 def tune_hparams(model,X_train, X_test, X_dev , y_train, y_test, y_dev,list_of_param_combination):
     best_acc = -1
+    best_model_path = ""
     for param_group in list_of_param_combination:
         temp_model = model(**param_group)
         temp_model.fit(X_train,y_train)
         acc,_ = predict_and_eval(temp_model,X_dev,y_dev,False)
         if acc > best_acc:
             best_acc = acc
+            best_model_path = f'./models/{model.__name__}_' +"_".join(["{}:{}".format(k,v) for k,v in param_group.items()]) + ".joblib"
             best_model = temp_model
             optimal_param = param_group
     train_acc,_= predict_and_eval(best_model,X_train,y_train,False) 
     dev_acc,_ = predict_and_eval(best_model,X_dev,y_dev,False)
     test_acc,_test_predicted =  predict_and_eval(best_model,X_test,y_test,False)
+    # save the best_model    
+    dump(best_model, best_model_path) 
+    
     return train_acc, dev_acc, test_acc, optimal_param,_test_predicted
     
 def get_combinations(param,values,combinations):
