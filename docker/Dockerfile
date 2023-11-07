@@ -6,5 +6,5 @@ COPY . /digits/
 RUN pip3 install -r /digits/requirements.txt
 # CMD ["echo", "our first cmd line"]
 WORKDIR /digits/
-CMD ["pytest","&python","exp.py"]
+CMD ["python","exp.py"]
 # RUN pytest
