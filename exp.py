@@ -22,6 +22,10 @@ args = parser.parse_args()
 digits = datasets.load_digits()
 
 X, y = preprocess(digits)
+for i, j in zip(X,y):
+    if y ==1:
+        print(i,j)
+        break
 
 print("Total number of samples: ",len(X))
 
