@@ -14,7 +14,35 @@ def test_post_predict():
               "8":["0.0", "0.0", "1.0", "11.0", "15.0", "1.0", "0.0", "0.0", "0.0", "0.0", "13.0", "16.0", "8.0", "2.0", "1.0", "0.0", "0.0", "0.0", "16.0", "15.0", "10.0", "16.0", "5.0", "0.0", "0.0", "0.0", "8.0", "16.0", "16.0", "7.0", "0.0", "0.0", "0.0", "0.0", "9.0", "16.0", "16.0", "4.0", "0.0", "0.0", "0.0", "0.0", "16.0", "14.0", "16.0", "15.0", "0.0", "0.0", "0.0", "0.0", "15.0", "15.0", "15.0", "16.0", "0.0", "0.0", "0.0", "0.0", "2.0", "9.0", "13.0", "6.0", "0.0", "0.0"],
               "9":["0.0", "0.0", "4.0", "10.0", "13.0", "6.0", "0.0", "0.0", "0.0", "1.0", "16.0", "14.0", "12.0", "16.0", "3.0", "0.0", "0.0", "4.0", "16.0", "6.0", "3.0", "16.0", "4.0", "0.0", "0.0", "0.0", "12.0", "16.0", "16.0", "16.0", "5.0", "0.0", "0.0", "0.0", "0.0", "4.0", "4.0", "16.0", "8.0", "0.0", "0.0", "0.0", "0.0", "0.0", "0.0", "15.0", "5.0", "0.0", "0.0", "0.0", "5.0", "7.0", "7.0", "16.0", "4.0", "0.0", "0.0", "0.0", "2.0", "14.0", "15.0", "9.0", "0.0", "0.0"]}
     
-    for image in inputs.keys():
-        response = app.test_client().post("/predict", json={"input":inputs[image]})
-        assert response.status_code == 200   
-        assert response.get_data() == bytes(image,"utf-8")
+    app.testing = True
+    response = app.test_client().get("/")
+    assert response.status_code == 200
+    response = app.test_client().post("/predict", json={"input":inputs["0"]})
+        
+    assert response.get_data() == bytes("0","utf-8") 
+    response = app.test_client().post("/predict", json={"input":inputs["1"]})
+    assert response.get_data() == bytes("1","utf-8")
+    
+    response = app.test_client().post("/predict", json={"input":inputs["2"]})
+    assert response.get_data() == bytes("2","utf-8")
+    
+    response = app.test_client().post("/predict", json={"input":inputs["3"]})
+    assert response.get_data() == bytes("3","utf-8")  
+    
+    response = app.test_client().post("/predict", json={"input":inputs["4"]})
+    assert response.get_data() == bytes("4","utf-8")
+    
+    response = app.test_client().post("/predict", json={"input":inputs["5"]})
+    assert response.get_data() == bytes("5","utf-8")
+    
+    response = app.test_client().post("/predict", json={"input":inputs["6"]})
+    assert response.get_data() == bytes("6","utf-8")
+
+    response = app.test_client().post("/predict", json={"input":inputs["7"]})
+    assert response.get_data() == bytes("7","utf-8")
+    
+    response = app.test_client().post("/predict", json={"input":inputs["8"]})
+    assert response.get_data() == bytes("8","utf-8")
+    
+    response = app.test_client().post("/predict", json={"input":inputs["9"]})
+    assert response.get_data() == bytes("9","utf-8")
