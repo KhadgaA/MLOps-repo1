@@ -18,7 +18,7 @@ def digit_predict():
     import numpy as np
     img_1 = np.array(img_1).reshape(-1,64)
     pred_1 = model.predict(img_1)
-    return str(pred_1)
+    return str(pred_1[0])
 
 @app.route("/compare_models",methods=["POST"])
 def digit_compare():
