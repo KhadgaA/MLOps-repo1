@@ -11,6 +11,7 @@ hand-written digits, from 0-9.
 # Import datasets, classifiers and performance metrics
 from sklearn import datasets, metrics, svm
 from utils import *
+import numpy as np
 import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--model",type=str, help="model, choices = {svm ,Dtree}",default="svm,Dtree", )
