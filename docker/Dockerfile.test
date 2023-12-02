@@ -1,0 +1,8 @@
+# Use the previously built Flask application image as the base
+FROM digits-base
+
+# Set the working directory for pytest
+WORKDIR /digits
+
+# Run pytest
+CMD ["pytest"]
