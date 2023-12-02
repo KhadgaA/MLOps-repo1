@@ -29,13 +29,15 @@ def digit_predict(model_name):
     if model_name == "svm":
         model = load(f'./models/SVC_best_gamma:1_C:1.joblib')
     elif model_name == 'Dtree':
-        model = load(f'.models/DecisionTreeClassifier_best_criterion:entropy_max_depth:15_min_samples_split:5.joblib')
+        model = load(f'./models/DecisionTreeClassifier_best_criterion:entropy_max_depth:15_min_samples_split:5.joblib')
 
     elif model_name == 'LogReg':
         model = load(f'./models/LogisticRegression_best_solver:lbfgs.joblib')
-
+    transform = load('./models/transformer_test_size:0.2_dev_size:0.2.joblib')
+    
     import numpy as np
     img_1 = np.array(img_1).reshape(-1,64)
+    img_1 = transform.transform(img_1)
     pred_1 = model.predict(img_1)
     return str(pred_1[0])
 

@@ -93,6 +93,7 @@ def tune_hparams(model,X_train, X_test, X_dev , y_train, y_test, y_dev,list_of_p
             best_model_path = f'./models/{model.__name__}_best_' +"_".join(["{}:{}".format(k,v) for k,v in param_group.items()]) + ".joblib"
             best_model = temp_model
             optimal_param = param_group
+        
         dev_acc,_ = predict_and_eval(temp_model,X_dev,y_dev,False)
         test_acc,_test_predicted =  predict_and_eval(temp_model,X_test,y_test,False)
         print(f'model: {model.__name__}:  train_acc: {acc}, dev_acc: {dev_acc}, test_acc: {test_acc}, params: {param_group}')
@@ -185,6 +186,8 @@ def compare_models(models,X,y,test_dev_size_groups, runs = 1,logs = False):
             X_train = transformer.transform(X_train)
             X_test = transformer.transform(X_test)
             X_dev = transformer.transform(X_dev)
+            
+            dump(transformer,"./models/transformer_" + "_".join(["{}:{}".format(k,v) for k,v in test_dev_size.items()]) + ".joblib")
             
             for model in models:
                 param_groups = get_model_hparams(model)

@@ -145,4 +145,34 @@ def test_post_predict_Dtree():
         assert response.get_data() == bytes("8","utf-8")
         
         response = app.test_client().post(f"/predict/{model_name}", json={"input":inputs["9"]})
-        assert response.get_data() == bytes("9","utf-8")
+        assert response.get_data() == bytes("9","utf++++
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            )
