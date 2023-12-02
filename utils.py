@@ -2,7 +2,9 @@ from sklearn.model_selection import train_test_split
 # Standard scientific Python imports
 import matplotlib.pyplot as plt
 from sklearn import datasets, metrics, svm
+# from sklearn.linear_model import LogisticRegression
 from joblib import dump, load
+from sklearn.preprocessing import Normalizer
 
 def preprocess(dataset):
     n_samples = len(dataset.images)
@@ -16,6 +18,9 @@ def image_grid(dataset):
         ax.imshow(image, cmap=plt.cm.gray_r, interpolation="nearest")
         ax.set_title("Training: %i" % label)
 
+def normalization(X):
+    transformer = Normalizer().fit(X) 
+    return transformer
 # Data preprocessing
 def split_train_dev_test(X,y,test_size,dev_size):
     _ = test_size + dev_size
@@ -85,9 +90,15 @@ def tune_hparams(model,X_train, X_test, X_dev , y_train, y_test, y_dev,list_of_p
         acc,_ = predict_and_eval(temp_model,X_dev,y_dev,False)
         if acc > best_acc:
             best_acc = acc
-            best_model_path = f'./models/{model.__name__}_' +"_".join(["{}:{}".format(k,v) for k,v in param_group.items()]) + ".joblib"
+            best_model_path = f'./models/{model.__name__}_best_' +"_".join(["{}:{}".format(k,v) for k,v in param_group.items()]) + ".joblib"
             best_model = temp_model
             optimal_param = param_group
+        dev_acc,_ = predict_and_eval(temp_model,X_dev,y_dev,False)
+        test_acc,_test_predicted =  predict_and_eval(temp_model,X_test,y_test,False)
+        print(f'model: {model.__name__}:  train_acc: {acc}, dev_acc: {dev_acc}, test_acc: {test_acc}, params: {param_group}')
+        model_path = f'./models/{"M23CSA003_"}{model.__name__}_' +"_".join(["{}:{}".format(k,v) for k,v in param_group.items()]) + ".joblib"
+        dump(temp_model, model_path) 
+
     train_acc,_= predict_and_eval(best_model,X_train,y_train,False) 
     dev_acc,_ = predict_and_eval(best_model,X_dev,y_dev,False)
     test_acc,_test_predicted =  predict_and_eval(best_model,X_test,y_test,False)
@@ -116,6 +127,9 @@ def get_models(model_name= "svm"):
     elif model_name == 'Dtree':
         from sklearn.tree import DecisionTreeClassifier
         return DecisionTreeClassifier
+    elif model_name == 'LogReg':
+        from sklearn.linear_model import LogisticRegression
+        return LogisticRegression
 def get_model_hparams(model_name = "svm"):
     if model_name =="svm":
         gamma = [0.001,0.01,0.1,1,10,100]
@@ -133,6 +147,11 @@ def get_model_hparams(model_name = "svm"):
                         "max_depth": max_depth,
                         "min_samples_split": min_samples_split
                         }
+    elif model_name =="LogReg":
+        solver = ["lbfgs", "liblinear", "newton-cg", "newton-cholesky", "sag", "saga"]
+        param_groups = {
+            'solver': solver
+        }
     return param_groups 
 
 import pandas as pd   
@@ -160,12 +179,20 @@ def compare_models(models,X,y,test_dev_size_groups, runs = 1,logs = False):
         for run in range(1,runs+1):
             print(f"Run : {run}")
             X_train, X_test, X_dev , y_train, y_test, y_dev = split_train_dev_test(X,y,**test_dev_size)
+            
+            transformer  = normalization(X_train)
+            
+            X_train = transformer.transform(X_train)
+            X_test = transformer.transform(X_test)
+            X_dev = transformer.transform(X_dev)
+            
             for model in models:
                 param_groups = get_model_hparams(model)
                 temp_model = get_models(model)       
                 param_combinations = get_hyperparameter_combinations(param_groups=param_groups)
                 train_acc, dev_acc, test_acc, optimal_param,_test_predicted = tune_hparams(temp_model,X_train, X_test, X_dev , y_train, y_test, y_dev,param_combinations)
                 print(f'model: {model}:  train_acc: {train_acc}, dev_acc: {dev_acc}, test_acc: {test_acc}, optimal_param: {optimal_param}')
+                
                 if logs:
                     logger[model]["train_acc"].append(train_acc)
                     logger[model]["dev_acc"].append(dev_acc)

@@ -1,5 +1,7 @@
 from utils import get_hyperparameter_combinations
 
+from joblib import dump, load
+
 def test_for_hparam_cominations_count():
     # a test case to check that all possible combinations of paramers are indeed generated
     gamma= [0.001, 0.01, 0.1, 1]
@@ -25,3 +27,16 @@ def test_for_hparam_cominations_values():
     expected_param_combo_2 = {'gamma': 0.01, 'C': 1}
 
     assert (expected_param_combo_1 in params_combinations) and (expected_param_combo_2 in params_combinations)
+    
+def test_loaded_LR():
+    model_name = 'LogisticRegression'
+    from sklearn.linear_model import LogisticRegression
+    params = ["lbfgs", "liblinear", "newton-cg", "newton-cholesky", "sag", "saga"]
+    for params_name in params:
+        model  = load(f'./models/M23CSA003_{model_name}_solver:{params_name}.joblib')
+        model_params = model.get_params(deep=True)
+        print(model_params)
+        assert isinstance(model,LogisticRegression)
+        
+        assert model_params['solver']==params_name
+        

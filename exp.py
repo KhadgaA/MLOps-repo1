@@ -14,10 +14,10 @@ from utils import *
 import numpy as np
 import argparse
 parser = argparse.ArgumentParser()
-parser.add_argument("--model",type=str, help="model, choices = {svm ,Dtree}",default="svm,Dtree", )
+parser.add_argument("--model",type=str, help="model, choices = {svm ,Dtree, LogReg}",default="svm,Dtree,LogReg", )
 parser.add_argument("--test_size",type=float, help="test_size",default=0.2)
 parser.add_argument("--dev_size",type=float, help="dev_size",default=0.2)
-parser.add_argument("--runs",type=int, help="runs",default=2)
+parser.add_argument("--runs",type=int, help="runs",default=1)
 args = parser.parse_args()
 
 digits = datasets.load_digits()
@@ -40,10 +40,10 @@ models_ = args.model.split(",")
 models =[ i for i in models_ if i != ","]
 print(models)
 logs = compare_models(models,X,y,test_dev_size_groups,runs=args.runs,logs=True)
-print("Confusion Matrix between production and Candidate mpdels on test dataset")
-production_predictions = logs['svm']["_test_predicted"]
-candidate_productions = logs['Dtree']["_test_predicted"]
-print(metrics.confusion_matrix(production_predictions,candidate_productions))
-print("Confusion matrix 2x2:")
-print(metrics.confusion_matrix(production_predictions==candidate_productions,production_predictions==candidate_productions))
+# print("Confusion Matrix between production and Candidate mpdels on test dataset")
+# production_predictions = logs['svm']["_test_predicted"]
+# candidate_productions = logs['Dtree']["_test_predicted"]
+# print(metrics.confusion_matrix(production_predictions,candidate_productions))
+# print("Confusion matrix 2x2:")
+# print(metrics.confusion_matrix(production_predictions==candidate_productions,production_predictions==candidate_productions))
 
