@@ -21,7 +21,6 @@ jobs:
       - run: echo "🍏 This job's status is ${{ job.status }}."
       - name: Install dep
         run:  pip3 install --no-cache-dir -r requirements.txt
-      - name: Run experiment
-        run:
-          python exp.py
-      - run: echo "I have added a echo statement in the github actions yaml file.👍"
+      - name: Run Pytest
+        run: pytest
+      - run: echo "Some Test cases were wrong , So pytest is working correctly 👍"
